@@ -1,0 +1,413 @@
+/* Reset and general styles */
+body {
+  font-family: Garamond, serif;
+  font-size: 11pt;
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0 0 6pt;
+}
+
+li,
+table {
+  margin: 0 0 6pt;
+}
+
+a {
+  text-decoration: none;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.italic {
+  font-style: italic;
+}
+
+/* Heading Styles */
+h1 {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+  color: #003366;
+  page-break-inside: avoid;
+  border-bottom: 0.75pt solid #000;
+  padding-bottom: 1pt;
+  font-variant: small-caps;
+}
+
+h2 {
+  font-size: 14pt;
+  font-weight: bold;
+  color: #004d99;
+  font-style: italic;
+  margin-top: 20px;
+}
+
+h3 {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #0066cc;
+  margin-top: 15px;
+}
+
+h4 {
+  font-size: 9pt;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 6pt;
+}
+
+/* Text elements (abstract, paper title, references, etc.) */
+.Abstract,
+.PaperTitle {
+  margin-top: 12pt;
+  margin-bottom: 0;
+  font-family: Garamond;
+  font-size: 18pt;
+  font-weight: bold;
+  font-variant: small-caps;
+  color: #595959;
+  text-align: center;
+  border-bottom: 0.75pt solid #000;
+  padding-bottom: 1pt;
+  page-break-inside: avoid;
+}
+
+.PaperInfo,
+.ListParagraph {
+  font-family: Garamond;
+  font-size: 11pt;
+}
+
+.Footer,
+.Header {
+  font-family: Arial, sans-serif;
+  font-size: 10pt;
+  line-height: normal;
+  margin-bottom: 6pt;
+}
+
+.FootnoteText,
+.PaperInfo {
+  font-family: Garamond, serif;
+  font-size: 10pt;
+}
+
+.ListParagraph {
+  margin-left: 36pt;
+}
+
+.Title,
+.RefJournal,
+.References {
+  font-size: 16pt;
+  font-weight: bold;
+  color: #323e4f;
+  margin-bottom: 6pt;
+  border-bottom: 1px solid #5b9bd5;
+}
+
+.PaperTitleChar,
+span.AbstractChar {
+  font-family: Garamond, serif;
+  font-size: 18pt;
+  font-weight: bold;
+  font-variant: small-caps;
+  color: #595959;
+}
+
+.span.Heading1Char,
+.span.Heading2Char {
+  font-family: Garamond, serif;
+  font-size: 16pt;
+}
+
+.PageNumberText {
+  font-weight: normal;
+}
+
+.main-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.logo-container img {
+  width: 100px;
+  height: auto;
+}
+
+.logo-container {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+
+.logo-container .line {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 0.5px;
+  background-color: #4d87fb;
+}
+
+.journal-name-container p {
+  margin: 10px;
+  font-size: 30px;
+  text-align: center;
+}
+
+.journal-name-container {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  position: relative;
+}
+
+.journal-name-container .line {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 0.5px;
+  background-color: #4d87fb;
+}
+
+.info-container p {
+  margin: 5px 0;
+  padding: 10px;
+}
+
+.info-container {
+  flex: 1;
+  text-align: left;
+  font-family: Garamond;
+  font-size: 14px;
+}
+
+.info-container .italic {
+  font-style: italic;
+}
+
+.info-container .line {
+  border-top: 0.5px solid #14a9ee;
+  padding-top: 20px;
+}
+
+/* Tables */
+.TableGrid {
+  width: 100%;
+  margin-bottom: 20px;
+  border-collapse: collapse;
+  font-size: 12pt;
+}
+
+.TableGrid th,
+.TableGrid td {
+  padding: 5px;
+  vertical-align: top;
+  border: 1px solid #c0c0c0;
+  text-align: center;
+}
+
+.table-caption {
+  text-align: center;
+  background-color: #4d87fb4a;
+  page-break-after: avoid;
+}
+
+.table-cell {
+  padding: 5px;
+  border: 1px solid #000;
+}
+
+.page-break-avoid {
+  page-break-after: avoid;
+}
+
+.volume-container {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+/* Footer and Misc */
+
+.footer-container {
+  display: flex;
+  justify-content: space-between; /* Justifica os itens com espaço entre eles */
+  align-items: center; /* Alinha verticalmente os itens */
+  padding: 10px 0;
+  text-align: center;
+}
+
+.footer-item {
+  padding: 0 20px;
+}
+
+.footer-divider {
+  height: 20px;
+  border-left: 1px solid #000;
+}
+
+.footer p {
+  font-family: Garamond, serif;
+  font-size: 12px;
+  color: #000;
+}
+
+.warning-text {
+  text-align: center;
+  font-weight: bold;
+  background-color: #ffff00;
+}
+
+.center {
+  text-align: center;
+}
+
+.figure-image {
+  width: 367px;
+  height: 240px;
+  display: inline-block;
+}
+
+.subtitle {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.numbered-list {
+  padding-left: 20px;
+  list-style-type: decimal;
+}
+
+.page-number-text {
+  font-weight: normal;
+}
+
+.author-bio {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.author-photo {
+  margin-right: 9pt;
+  float: left;
+  width: 144px;
+  height: 164px;
+}
+
+.hyperlink {
+  text-decoration: underline;
+  color: blue;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.page-break-avoid {
+  page-break-after: avoid;
+}
+
+@media print {
+  h1:not(:first-of-type) {
+    page-break-before: always;
+  }
+
+  @page {
+    size: A4;
+    margin: 6%;
+  }
+
+  @page :first {
+    @top-left {
+      content: "Nome do Artigo";
+      font-family: "Garamond", serif;
+      font-size: 12pt;
+      text-align: left;
+    }
+
+    @bottom-left {
+      content: ""; /* Sem numeração na primeira página à esquerda */
+    }
+
+    @top-right {
+      content: "Sobrenomes dos Autores";
+      font-family: "Garamond", serif;
+      font-size: 12pt;
+      text-align: right;
+    }
+
+    @bottom-right {
+      content: counter(page); /* Numeração à direita na primeira página */
+      font-family: "Garamond", serif;
+      font-size: 10pt;
+    }
+  }
+
+  @page :right {
+    @top-left {
+      content: "Nome do Artigo"; /* Cabeçalho à esquerda */
+      font-family: "Garamond", serif;
+      font-size: 12pt;
+      text-align: left;
+    }
+
+    @top-right {
+      content: "Sobrenomes dos Autores"; /* Cabeçalho à direita */
+      font-family: "Garamond", serif;
+      font-size: 12pt;
+      text-align: right;
+    }
+
+    @bottom-right {
+      content: counter(page); /* Numeração à direita nas páginas ímpares */
+      font-family: "Garamond", serif;
+      font-size: 10pt;
+    }
+  }
+
+  /* Páginas subsequentes (pares) */
+  @page :left {
+    @top-left {
+      content: "Nome do Artigo"; /* Cabeçalho à esquerda */
+      font-family: "Garamond", serif;
+      font-size: 12pt;
+      text-align: left;
+    }
+
+    @bottom-left {
+      content: counter(page); /* Numeração à esquerda nas páginas pares */
+      font-family: "Garamond", serif;
+      font-size: 10pt;
+    }
+
+    @top-right {
+      content: "Sobrenomes dos Autores"; /* Cabeçalho à direita */
+      font-family: "Garamond", serif;
+      font-size: 12pt;
+      text-align: right;
+    }
+  }
+
+  /* Opções gerais para personalizar a aparência dos números da página */
+  .page-number-text {
+    font-weight: normal;
+    font-size: 10pt;
+  }
+}
