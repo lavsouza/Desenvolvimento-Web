@@ -2,23 +2,48 @@ body {
     font-family: Arial, sans-serif;
     text-align: center;
     background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
+    color: #333;
+    margin-top: 20px;
+}
+
+.attempts-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.attempts-label {
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.attempts-count {
+    font-size: 24px;
+    font-weight: bold;
     color: #333;
 }
 
 .game-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     margin-top: 20px;
 }
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(10, 40px);
-    grid-template-rows: repeat(10, 40px);
+    grid-template-columns: repeat(10, 40px); /* 9 colunas + 1 para os números */
+    grid-template-rows: repeat(10, 40px); /* 9 linhas + 1 para os números */
     gap: 2px;
+    background-color: #87CEEB;
+    padding: 2px;
+    border: 2px solid #333;
 }
 
 .cell {
@@ -30,16 +55,22 @@ h1 {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .cell.hit {
-    background-color: #ff4d4d;
+    background-color: #4CAF50; /* Verde para acerto */
 }
 
 .cell.miss {
-    background-color: #a0a0a0;
+    background-color: #FF5252; /* Vermelho para erro */
 }
 
-.cell.ship {
-    background-color: #333;
+/* .cell.ship {
+    background-color: #333; /* Cor dos navios (não visível inicialmente) */
+} */
+
+.cell.number {
+    background-color: #f0f0f0;
+    cursor: default;
 }
