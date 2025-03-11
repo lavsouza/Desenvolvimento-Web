@@ -3,9 +3,13 @@ const statusElement = document.getElementById('status');
 let board = Array(7).fill().map(() => Array(7).fill(null)); // Matriz 7x7
 let currentPlayer = 'blue'; // Azul começa
 let lastMove = null; // Última jogada
-
+let vitorias = {
+    blue: 0,
+    red: 0
+};
 // Cria o tabuleiro
 function createBoard() {
+    atualizarContadorVitorias();
     for (let row = 0; row < 7; row++) {
         for (let col = 0; col < 7; col++) {
             const cell = document.createElement('div');
@@ -29,16 +33,29 @@ function handleCellClick(event) {
         lastMove = { row, col };
 
         if (checkWin(row, col)) {
-            statusElement.textContent = `Jogador ${currentPlayer.toUpperCase()} venceu!`;
-            boardElement.removeEventListener('click', handleCellClick);
+            vitorias[currentPlayer] += 1;
+            atualizarContadorVitorias();
+            vencedor = currentPlayer;
 
-            // Adiciona um botão para reiniciar o jogo
-            const resetButton = document.createElement('button');
-            resetButton.textContent = 'Reiniciar Jogo';
-            resetButton.style.marginTop = '20px';
-            resetButton.addEventListener('click', resetGame);
-            document.body.appendChild(resetButton);
-            return;
+            const msgVitoria = document.createElement('p');
+            msgVitoria.textContent = `Jogador ${currentPlayer.toUpperCase()} venceu!`;
+            document.body.appendChild(msgVitoria);
+
+            const tempoEspera = 5000;
+            let tempoRestante = tempoEspera / 1000; 
+
+            // Aguarda 5 segundos e então reinicia o jogo automaticamente
+            const intervalo = setInterval(() => {
+                tempoRestante -= 1; // Decrementa o tempo restante
+                msgVitoria.textContent = `Jogador ${vencedor.toUpperCase()} venceu! Reiniciando em ${tempoRestante}...`;
+
+                // Quando o tempo acabar, reinicia o jogo e limpa o intervalo
+                if (tempoRestante <= 0) {
+                    clearInterval(intervalo); // Para o contador
+                    resetGame();
+                    msgVitoria.remove(); // Remove a mensagem de vitória
+                }
+            }, 1000);
         }
 
         // Alterna o jogador
@@ -48,6 +65,24 @@ function handleCellClick(event) {
         // Destaca as células válidas para a próxima jogada
         highlightValidMoves();
     }
+}
+
+function atualizarContadorVitorias() {
+    // Verifica se o elemento de contador já existe
+    let contadorVitorias = document.getElementById('contador-vitorias');
+    if (!contadorVitorias) {
+        // Se não existir, cria um novo elemento
+        contadorVitorias = document.createElement('div');
+        contadorVitorias.id = 'contador-vitorias';
+        contadorVitorias.style.marginTop = '20px';
+        contadorVitorias.style.fontSize = '1.2em';
+        document.body.appendChild(contadorVitorias);
+    }
+
+    // Atualiza o conteúdo do contador
+    contadorVitorias.innerHTML = `
+        Vitórias - Azul: ${vitorias.blue} | Vermelho: ${vitorias.red}
+    `;
 }
 
 // Verifica se o movimento é válido
@@ -204,6 +239,7 @@ function highlightValidMoves() {
             }
         });
     }
+    
 }
 
 // Inicializa o jogo
