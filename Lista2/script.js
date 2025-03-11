@@ -4,41 +4,6 @@ let board = Array(7).fill().map(() => Array(7).fill(null)); // Matriz 7x7
 let currentPlayer = 'blue'; // Azul começa
 let lastMove = null; // Última jogada
 
-function isValidMove(row, col) {
-    // Se for a primeira jogada, qualquer célula é válida
-    if (lastMove === null) return true;
-
-    const { row: lastRow, col: lastCol } = lastMove;
-
-    // Verifica se a célula está vazia
-    if (board[row][col] !== null) return false;
-
-    // Verifica se há células adjacentes disponíveis
-    const adjacentCells = [
-        { row: lastRow - 1, col: lastCol - 1 }, // Diagonal superior esquerda
-        { row: lastRow - 1, col: lastCol },     // Acima
-        { row: lastRow - 1, col: lastCol + 1 }, // Diagonal superior direita
-        { row: lastRow, col: lastCol - 1 },     // Esquerda
-        { row: lastRow, col: lastCol + 1 },     // Direita
-        { row: lastRow + 1, col: lastCol - 1 }, // Diagonal inferior esquerda
-        { row: lastRow + 1, col: lastCol },     // Abaixo
-        { row: lastRow + 1, col: lastCol + 1 }  // Diagonal inferior direita
-    ];
-
-    // Verifica se a célula clicada é adjacente à última jogada
-    const isAdjacent = adjacentCells.some(cell => cell.row === row && cell.col === col);
-
-    // Se não houver células adjacentes disponíveis, permite jogar em qualquer célula vazia
-    if (!isAdjacent) {
-        const hasAvailableAdjacentCells = adjacentCells.some(cell =>
-            cell.row >= 0 && cell.row < 7 && cell.col >= 0 && cell.col < 7 && board[cell.row][cell.col] === null
-        );
-        if (hasAvailableAdjacentCells) return false; // Ainda há células adjacentes disponíveis
-    }
-
-    return true;
-}
-
 // Cria o tabuleiro
 function createBoard() {
     for (let row = 0; row < 7; row++) {
@@ -58,13 +23,11 @@ function handleCellClick(event) {
     const row = parseInt(event.target.dataset.row);
     const col = parseInt(event.target.dataset.col);
 
-    // Verifica se a célula está vazia e se o movimento é válido
     if (board[row][col] === null && isValidMove(row, col)) {
         board[row][col] = currentPlayer;
         event.target.classList.add(currentPlayer);
         lastMove = { row, col };
 
-        // Verifica se há um vencedor
         if (checkWin(row, col)) {
             statusElement.textContent = `Jogador ${currentPlayer.toUpperCase()} venceu!`;
             boardElement.removeEventListener('click', handleCellClick);
@@ -81,14 +44,50 @@ function handleCellClick(event) {
         // Alterna o jogador
         currentPlayer = currentPlayer === 'blue' ? 'red' : 'blue';
         statusElement.textContent = `Vez do Jogador ${currentPlayer.toUpperCase()}`;
+
+        // Destaca as células válidas para a próxima jogada
+        highlightValidMoves();
     }
 }
 
 // Verifica se o movimento é válido
 function isValidMove(row, col) {
-    if (lastMove === null) return true; // Primeira jogada
+    // Se for a primeira jogada, qualquer célula é válida
+    if (lastMove === null) return true;
+
     const { row: lastRow, col: lastCol } = lastMove;
-    return Math.abs(row - lastRow) <= 1 && Math.abs(col - lastCol) <= 1;
+
+    // Verifica se a célula está vazia
+    if (board[row][col] !== null) return false;
+
+    // Verifica se a célula clicada é adjacente à última jogada
+    const isAdjacent = Math.abs(row - lastRow) <= 1 && Math.abs(col - lastCol) <= 1;
+
+    // Se a célula for adjacente, o movimento é válido
+    if (isAdjacent) return true;
+
+    // Se não for adjacente, verifica se ainda há células adjacentes disponíveis
+    const adjacentCells = [
+        { row: lastRow - 1, col: lastCol - 1 }, // Diagonal superior esquerda
+        { row: lastRow - 1, col: lastCol },     // Acima
+        { row: lastRow - 1, col: lastCol + 1 }, // Diagonal superior direita
+        { row: lastRow, col: lastCol - 1 },     // Esquerda
+        { row: lastRow, col: lastCol + 1 },     // Direita
+        { row: lastRow + 1, col: lastCol - 1 }, // Diagonal inferior esquerda
+        { row: lastRow + 1, col: lastCol },     // Abaixo
+        { row: lastRow + 1, col: lastCol + 1 }  // Diagonal inferior direita
+    ];
+
+    // Verifica se há pelo menos uma célula adjacente disponível
+    const hasAvailableAdjacentCells = adjacentCells.some(({ row, col }) =>
+        row >= 0 && row < 7 && col >= 0 && col < 7 && board[row][col] === null
+    );
+
+    // Se ainda houver células adjacentes disponíveis, o movimento é inválido
+    if (hasAvailableAdjacentCells) return false;
+
+    // Se não houver células adjacentes disponíveis, o movimento é válido
+    return true;
 }
 
 // Verifica se há um vencedor
@@ -124,6 +123,7 @@ function checkWin(row, col) {
     return false;
 }
 
+// Reinicia o jogo
 function resetGame() {
     // Remove o botão de reinício, se existir
     const existingResetButton = document.querySelector('button');
@@ -134,7 +134,7 @@ function resetGame() {
     // Limpa o tabuleiro visual
     const cells = document.querySelectorAll('.cell');
     cells.forEach(cell => {
-        cell.classList.remove('blue', 'red');
+        cell.classList.remove('blue', 'red', 'highlight');
     });
 
     // Reinicia a matriz do tabuleiro
@@ -149,6 +149,61 @@ function resetGame() {
 
     // Reativa os eventos de clique
     boardElement.addEventListener('click', handleCellClick);
+
+    // Destaca as células válidas no início do jogo
+    highlightValidMoves();
+}
+
+// Destaca as células válidas para a próxima jogada
+function highlightValidMoves() {
+    // Remove o destaque de todas as células
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => {
+        cell.classList.remove('highlight');
+    });
+
+    // Se for a primeira jogada, todas as células são válidas
+    if (lastMove === null) {
+        cells.forEach(cell => {
+            cell.classList.add('highlight');
+        });
+        return;
+    }
+
+    const { row: lastRow, col: lastCol } = lastMove;
+
+    // Verifica as células adjacentes à última jogada
+    const adjacentCells = [
+        { row: lastRow - 1, col: lastCol - 1 }, // Diagonal superior esquerda
+        { row: lastRow - 1, col: lastCol },     // Acima
+        { row: lastRow - 1, col: lastCol + 1 }, // Diagonal superior direita
+        { row: lastRow, col: lastCol - 1 },     // Esquerda
+        { row: lastRow, col: lastCol + 1 },     // Direita
+        { row: lastRow + 1, col: lastCol - 1 }, // Diagonal inferior esquerda
+        { row: lastRow + 1, col: lastCol },     // Abaixo
+        { row: lastRow + 1, col: lastCol + 1 }  // Diagonal inferior direita
+    ];
+
+    // Destaca as células adjacentes válidas
+    adjacentCells.forEach(({ row, col }) => {
+        if (row >= 0 && row < 7 && col >= 0 && col < 7 && board[row][col] === null) {
+            const cell = document.querySelector(`.cell[data-row='${row}'][data-col='${col}']`);
+            cell.classList.add('highlight');
+        }
+    });
+
+    // Se não houver células adjacentes válidas, destaca todas as células vazias
+    const hasValidAdjacentCells = adjacentCells.some(({ row, col }) =>
+        row >= 0 && row < 7 && col >= 0 && col < 7 && board[row][col] === null
+    );
+
+    if (!hasValidAdjacentCells) {
+        cells.forEach(cell => {
+            if (board[cell.dataset.row][cell.dataset.col] === null) {
+                cell.classList.add('highlight');
+            }
+        });
+    }
 }
 
 // Inicializa o jogo
