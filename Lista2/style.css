@@ -30,12 +30,12 @@ h1 {
     cursor: pointer;
 }
 
-.cell.blue {
+.cell.azul {
     background-color: blue;
     border-radius: 50%;
 }
 
-.cell.red {
+.cell.vermelho {
     background-color: red;
     border-radius: 50%;
 }

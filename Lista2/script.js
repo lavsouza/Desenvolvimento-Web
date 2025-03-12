@@ -1,11 +1,12 @@
 const boardElement = document.getElementById('board');
 const statusElement = document.getElementById('status');
 let board = Array(7).fill().map(() => Array(7).fill(null)); // Matriz 7x7
-let currentPlayer = 'blue'; // Azul começa
+let currentPlayer = 'azul'; // Azul começa
 let lastMove = null; // Última jogada
+let gameEnded = false; // Variável para controlar o estado do jogo
 let vitorias = {
-    blue: 0,
-    red: 0
+    azul: 0,
+    vermelho: 0
 };
 // Cria o tabuleiro
 function createBoard() {
@@ -24,6 +25,7 @@ function createBoard() {
 
 // Lida com o clique em uma célula
 function handleCellClick(event) {
+    if (gameEnded) return;
     const row = parseInt(event.target.dataset.row);
     const col = parseInt(event.target.dataset.col);
 
@@ -33,11 +35,11 @@ function handleCellClick(event) {
         lastMove = { row, col };
 
         if (checkWin(row, col)) {
+            gameEnded = true;
             vitorias[currentPlayer] += 1;
             atualizarContadorVitorias();
             vencedor = currentPlayer;
-
-            const msgVitoria = document.createElement('p');
+            const msgVitoria = document.createElement('h1');
             msgVitoria.textContent = `Jogador ${currentPlayer.toUpperCase()} venceu!`;
             document.body.appendChild(msgVitoria);
 
@@ -56,15 +58,37 @@ function handleCellClick(event) {
                     msgVitoria.remove(); // Remove a mensagem de vitória
                 }
             }, 1000);
+        } else if (checkDraw(row, col)) {
+            gameEnded = true
+            const msgEmpate = document.createElement('p');
+            msgEmpate.textContent = 'O jogo terminou em empate!';
+            document.body.appendChild(msgEmpate);
+            
+            setTimeout(() => {
+                msgEmpate.remove();
+                resetGame();
+            }, 5000);
         }
 
         // Alterna o jogador
-        currentPlayer = currentPlayer === 'blue' ? 'red' : 'blue';
+        currentPlayer = currentPlayer === 'azul' ? 'vermelho' : 'azul';
         statusElement.textContent = `Vez do Jogador ${currentPlayer.toUpperCase()}`;
 
         // Destaca as células válidas para a próxima jogada
         highlightValidMoves();
     }
+}
+
+function checkDraw(row, col) {
+    
+    for (let row = 0; row < 7; row++) {
+        for (let col = 0; col < 7; col++) {
+            if (board[row][col] === null) {
+                return false; // Ainda há espaços vazios, então não é empate
+            }
+        }
+    }
+    return true; // Todas as células estão preenchidas
 }
 
 function atualizarContadorVitorias() {
@@ -81,7 +105,7 @@ function atualizarContadorVitorias() {
 
     // Atualiza o conteúdo do contador
     contadorVitorias.innerHTML = `
-        Vitórias - Azul: ${vitorias.blue} | Vermelho: ${vitorias.red}
+        Vitórias - Azul: ${vitorias.azul} | Vermelho: ${vitorias.vermelho}
     `;
 }
 
@@ -160,23 +184,19 @@ function checkWin(row, col) {
 
 // Reinicia o jogo
 function resetGame() {
-    // Remove o botão de reinício, se existir
-    const existingResetButton = document.querySelector('button');
-    if (existingResetButton) {
-        existingResetButton.remove();
-    }
+    gameEnded = false
 
     // Limpa o tabuleiro visual
     const cells = document.querySelectorAll('.cell');
     cells.forEach(cell => {
-        cell.classList.remove('blue', 'red', 'highlight');
+        cell.classList.remove('azul', 'vermelho', 'highlight');
     });
 
     // Reinicia a matriz do tabuleiro
     board = Array(7).fill().map(() => Array(7).fill(null));
 
     // Reinicia as variáveis do jogo
-    currentPlayer = 'blue';
+    currentPlayer = 'azul';
     lastMove = null;
 
     // Atualiza a mensagem de status
