@@ -1,15 +1,15 @@
 const boardElement = document.getElementById('board');
 const statusElement = document.getElementById('status');
-let board = Array(7).fill().map(() => Array(7).fill(null)); // Matriz 7x7
-let currentPlayer = 'azul'; // Azul começa
-let lastMove = null; // Última jogada
-let gameEnded = false; // Variável para controlar o estado do jogo
+let board = Array(7).fill().map(() => Array(7).fill(null));
+let currentPlayer = 'azul';
+let lastMove = null;
+let gameEnded = false; //Estado do jogo
 let vitorias = {
     azul: 0,
     vermelho: 0
 };
 // Cria o tabuleiro
-function createBoard() {
+function tabuleiro() {
     atualizarContadorVitorias();
     for (let row = 0; row < 7; row++) {
         for (let col = 0; col < 7; col++) {
@@ -17,24 +17,24 @@ function createBoard() {
             cell.classList.add('cell');
             cell.dataset.row = row;
             cell.dataset.col = col;
-            cell.addEventListener('click', handleCellClick);
+            cell.addEventListener('click', movimento);
             boardElement.appendChild(cell);
         }
     }
 }
 
 // Lida com o clique em uma célula
-function handleCellClick(event) {
+function movimento(event) {
     if (gameEnded) return;
     const row = parseInt(event.target.dataset.row);
     const col = parseInt(event.target.dataset.col);
 
-    if (board[row][col] === null && isValidMove(row, col)) {
+    if (board[row][col] === null && movValido(row, col)) {
         board[row][col] = currentPlayer;
         event.target.classList.add(currentPlayer);
         lastMove = { row, col };
 
-        if (checkWin(row, col)) {
+        if (verificaVitoria(row, col)) {
             gameEnded = true;
             vitorias[currentPlayer] += 1;
             atualizarContadorVitorias();
@@ -58,7 +58,7 @@ function handleCellClick(event) {
                     msgVitoria.remove(); // Remove a mensagem de vitória
                 }
             }, 1000);
-        } else if (checkDraw(row, col)) {
+        } else if (verificaEmpate(row, col)) {
             gameEnded = true
             const msgEmpate = document.createElement('p');
             msgEmpate.textContent = 'O jogo terminou em empate!';
@@ -75,11 +75,11 @@ function handleCellClick(event) {
         statusElement.textContent = `Vez do Jogador ${currentPlayer.toUpperCase()}`;
 
         // Destaca as células válidas para a próxima jogada
-        highlightValidMoves();
+        movValidos();
     }
 }
 
-function checkDraw(row, col) {
+function verificaEmpate(row, col) {
     
     for (let row = 0; row < 7; row++) {
         for (let col = 0; col < 7; col++) {
@@ -109,8 +109,8 @@ function atualizarContadorVitorias() {
     `;
 }
 
-// Verifica se o movimento é válido
-function isValidMove(row, col) {
+// Verifica se o tabuleiro é válido
+function movValido(row, col) {
     // Se for a primeira jogada, qualquer célula é válida
     if (lastMove === null) return true;
 
@@ -122,7 +122,7 @@ function isValidMove(row, col) {
     // Verifica se a célula clicada é adjacente à última jogada
     const isAdjacent = Math.abs(row - lastRow) <= 1 && Math.abs(col - lastCol) <= 1;
 
-    // Se a célula for adjacente, o movimento é válido
+    // Se a célula for adjacente, o tabuleiro é válido
     if (isAdjacent) return true;
 
     // Se não for adjacente, verifica se ainda há células adjacentes disponíveis
@@ -142,15 +142,15 @@ function isValidMove(row, col) {
         row >= 0 && row < 7 && col >= 0 && col < 7 && board[row][col] === null
     );
 
-    // Se ainda houver células adjacentes disponíveis, o movimento é inválido
+    // Se ainda houver células adjacentes disponíveis, o tabuleiro é inválido
     if (hasAvailableAdjacentCells) return false;
 
-    // Se não houver células adjacentes disponíveis, o movimento é válido
+    // Se não houver células adjacentes disponíveis, o tabuleiro é válido
     return true;
 }
 
 // Verifica se há um vencedor
-function checkWin(row, col) {
+function verificaVitoria(row, col) {
     const directions = [
         [1, 0], [0, 1], [1, 1], [1, -1] // Horizontal, Vertical, Diagonal
     ];
@@ -203,14 +203,14 @@ function resetGame() {
     statusElement.textContent = 'Jogador Azul começa!';
 
     // Reativa os eventos de clique
-    boardElement.addEventListener('click', handleCellClick);
+    boardElement.addEventListener('click', movimento);
 
     // Destaca as células válidas no início do jogo
-    highlightValidMoves();
+    movValidos();
 }
 
 // Destaca as células válidas para a próxima jogada
-function highlightValidMoves() {
+function movValidos() {
     // Remove o destaque de todas as células
     const cells = document.querySelectorAll('.cell');
     cells.forEach(cell => {
@@ -263,4 +263,4 @@ function highlightValidMoves() {
 }
 
 // Inicializa o jogo
-createBoard();
+tabuleiro();
